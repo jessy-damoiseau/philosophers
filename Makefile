@@ -6,7 +6,7 @@
 #    By: jessy <jessy@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/09 14:45:20 by bmaudet           #+#    #+#              #
-#    Updated: 2021/11/01 20:35:43 by jessy            ###   ########.fr        #
+#    Updated: 2021/11/18 04:31:24 by jessy            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ OBJS_DIR	=	objs
 ################################################################################
 
 CC =		@gcc
-RM =		@rm -f
+RM =		@rm -rf
 CFLAGS =	-Wall -Wextra -Werror -g3 -I$(HEADERS_DIR)
 
 ################################################################################
@@ -43,9 +43,12 @@ OBJS2 = $(addprefix $(OBJS_DIR)/, $(SRCS2:.c=.o))
 
 ################################################################################
 
-all:	init_name1 ${NAME1}
+all:	init_dir init_name1 $(NAME1)
 
 ################################################################################
+
+init_dir:
+		@ $(shell mkdir -p $(OBJS_DIR))
 
 init_name1:
 		if test -f $(NAME1);\
@@ -59,7 +62,7 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 
 ################################################################################
 
-${NAME1}:	${OBJS1}
+$(NAME1):	$(OBJS1)
 			echo "\t$(_YELLOW)[Creating $(NAME1) program]"
 					$(CC) $(OBJS1) -o $(NAME1)
 					echo "$(_GREEN)[$(NAME1) program created & ready]"
@@ -68,11 +71,11 @@ ${NAME1}:	${OBJS1}
 
 clean:
 		echo "$(_RED)[cleaning up .out & objects files]"
-		${RM} ${OBJS1} ${OBJS2}
+		$(RM) $(OBJS1) $(OBJS2) $(OBJS_DIR)
 
 fclean:		clean
 			echo "$(_RED)[cleaning up .out, objects & library files]"
-			${RM} ${NAME1} ${NAME2}
+			$(RM) $(NAME1) $(NAME2)
 
 re:		fclean all
 

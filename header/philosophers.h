@@ -3,13 +3,13 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <sys/time.h>
 
 typedef struct	s_philo
 {
-				int	tdie;
-				int	teat;
-				int	tsleep;
+				int id_philo;
 				int	nbeat;
+				int nb_fork;
 }				t_philo;
 
 typedef struct s_parse
@@ -20,6 +20,10 @@ typedef struct s_parse
 	int	tsleep;
 	int	nbeat;
 	int	nbforks;
+	int	*forks;
+	time_t stime_ref;
+	suseconds_t utime_ref;
+	struct timeval time;
 }				t_parse;
 
 size_t	len(char *str);
