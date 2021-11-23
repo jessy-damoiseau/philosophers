@@ -17,30 +17,33 @@ void	fill_struct(t_parse *parse, int fill, int i)
 		parse->nbeat = fill;
 }
 
-int	fill_philo(t_parse *parse, t_philo **philo)
+int	fill_philo(t_parse *parse)
 {
 	int i;
 
 	i = 0;
-	(*philo) = malloc(sizeof(t_philo) * parse->nbphilo);
-	if (!(*philo))
+	parse->philo = malloc(sizeof(t_philo) * parse->nbphilo);
+	if (!parse->philo)
 		return (print_fd("error malloc\n", 2, 1));
 	while (i < parse->nbphilo)
 	{
-		(*philo)[i].nbeat = parse->nbeat;
-		(*philo)[i].id_philo = i + 1;
+		parse->philo[i].nbeat = parse->nbeat;
+		parse->philo[i].id_philo = i + 1;
 		i++;
 	}
 	parse->forks = malloc(sizeof(int) * parse->nbforks);
 	if (!parse->forks)
+	{
+		free(parse->philo);
 		return (print_fd("error malloc\n", 2, 1));
+	}
 	i = 0;
 	while (i < parse->nbforks)
 		parse->forks[i++] = 1;
 	return (0);
 }
 
-int	parsing(t_parse *parse, char **args, int ac, t_philo **philo)
+int	parsing(t_parse *parse, char **args, int ac)
 {
 	int	i;
 	int fill;
@@ -60,7 +63,7 @@ int	parsing(t_parse *parse, char **args, int ac, t_philo **philo)
 		}
 		fill_struct(parse, fill, i);
 	}
-	return (fill_philo(parse, philo));
+	return (fill_philo(parse));
 }
 
 size_t	get_time(t_parse *parse)
@@ -74,56 +77,117 @@ size_t	get_time(t_parse *parse)
 	return (sec * 1000 + (usec / 100));
 }
 
-void	action_philo(t_parse *parse, t_philo *philo, int id)
+int init_mutex(t_parse *parse)
 {
-	if (!parse->forks[id]){}
-		//mutex_lock1
+	int tab[parse->nbforks];
+	int i;
+
+	i = pthread_mutex_init(&parse->mtext, 0);
+	if (i)
+		return (print_fd("mutex init failed\n", 2, 1));
+	parse->lock_fork = malloc(sizeof(pthread_mutex_t) * parse->nbforks);
+	if (!parse->lock_fork)
+	{
+		pthread_mutex_destroy(&parse->mtext);
+		return (print_fd("malloc failed\n", 2, 1));
+	}
+	i = 0;
+	while (i < parse->nbforks)
+		tab[i++] = 0;
+	i = 0;
+	while (i < parse->nbforks)
+	{
+		tab[i] = pthread_mutex_init(&parse->lock_fork[i], 0);
+		if (tab[i] != 0)
+		{
+			pthread_mutex_destroy(&parse->mtext);
+			while (i >= 0)
+				pthread_mutex_destroy(&parse->lock_fork[i--]);
+			clear_struct(parse, 1);
+			return (print_fd("mutex init failed\n", 2, 1));
+		}
+		i++;
+	}
+	return (0);
+}
+
+void	*action_philo(void *struct_parse)
+{
+	t_parse *parse;
+	t_philo *philo;
+	int id;
+
+	parse = struct_parse;
+	philo = parse->philo;
+	id = parse->id;
+	pthread_mutex_lock(&parse->lock_fork[id]);
 	parse->forks[id] = 0;
-	//mutex_lock3
+	pthread_mutex_lock(&parse->mtext);
 	printf("%ld ms philosopher number %d -> has taken a fork\n", get_time(parse), philo[id].id_philo);
-	//mutex_unlock3
-	if (!parse->forks[philo[id].id_philo % parse->nbphilo]){}
-		//mutex_lock2
+	pthread_mutex_unlock(&parse->mtext);
+	pthread_mutex_lock(&parse->lock_fork[philo[id].id_philo % parse->nbphilo]);
 	parse->forks[philo[id].id_philo % parse->nbphilo] = 0;
-	//mutex_lock3
+	pthread_mutex_lock(&parse->mtext);
 	printf("%ld ms philosopher number %d -> has taken a fork\n", get_time(parse), philo[id].id_philo);
 	printf("%ld ms philosopher number %d -> is eating\n", get_time(parse), philo[id].id_philo);
-	//mutex_unlock3
+	pthread_mutex_unlock(&parse->mtext);
 	usleep(parse->teat * 100);
 	parse->forks[id] = 1;
 	parse->forks[philo[id].id_philo % parse->nbphilo] = 1;
-	//mutex_unlock1
-	//mutex_unlock2;
-	//mutex_lock3
+	pthread_mutex_unlock(&parse->lock_fork[id]);
+	pthread_mutex_unlock(&parse->lock_fork[philo[id].id_philo % parse->nbphilo]);
+	pthread_mutex_lock(&parse->mtext);
 	printf("%ld ms philosopher number %d -> is sleeping\n", get_time(parse), philo[id].id_philo);
-	//mutex_unlock3
+	pthread_mutex_unlock(&parse->mtext);
 	usleep(parse->tsleep * 100);
-	//mutex_lock3
+	pthread_mutex_lock(&parse->mtext);
 	printf("%ld ms philosopher number %d -> is thinking\n", get_time(parse), philo[id].id_philo);
-	//mutex_unlock3
+	pthread_mutex_unlock(&parse->mtext);
+	if (parse->philo[id].nbeat > 0)
+		parse->philo[id].nbeat--;
+	return (0);
 }
 
 int	main(int ac, char **av)
 {
-	t_parse parse;
-	t_philo	*philo;
-	int i;
+	t_parse	parse;
+	int		finish_philo;
 
-	philo = 0;
 	init_struct(&parse);
-	parsing(&parse, av, ac, &philo);
+	if (parsing(&parse, av, ac))
+		return (1);
+	if (init_mutex(&parse))
+		return (1);
+	parse.tab_thread = malloc(sizeof(pthread_t) * parse.nbphilo);
+	if (!parse.tab_thread)
+		return (clear_struct(&parse, 1));
 	gettimeofday(&parse.time, 0);
 	parse.stime_ref = parse.time.tv_sec;
 	parse.utime_ref = parse.time.tv_usec;
 	while (1)
 	{
-		i = 0;
-		while (i < parse.nbphilo)
+		parse.id = 0;
+		while (parse.id < parse.nbphilo)
 		{
-			action_philo(&parse, philo, i++);
-			//break ;
+			pthread_create(&parse.tab_thread[parse.id], 0, &action_philo, &parse);
+			parse.id++;
 		}
-		while (1);
+		parse.id = 0;
+		while (parse.id < parse.nbphilo)
+		{
+			pthread_join(parse.tab_thread[parse.id], NULL);
+			parse.id++;
+		}
+		parse.id = 0;
+		finish_philo = 0;
+		while (parse.id < parse.nbphilo)
+		{
+			if (!parse.philo[parse.id].nbeat)
+				finish_philo++;
+			parse.id++;
+		}
+		if (finish_philo == parse.nbphilo)
+			break ;
 	}
-	return (0);
+	return (clear_struct(&parse, 0));
 }

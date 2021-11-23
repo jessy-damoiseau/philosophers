@@ -38,9 +38,26 @@ int	ft_atoi(char *str)
 void	init_struct(t_parse *parse)
 {
 	parse->nbphilo = 0;
-	parse->nbeat = 0;
+	parse->nbeat = -1;
 	parse->tdie = 0;
 	parse->tsleep = 0;
 	parse->nbforks = 0;
 	parse->teat = 0;
+	parse->philo = 0;
+	parse->id = 0;
+	parse->tab_thread = 0;
+}
+
+int	clear_struct(t_parse *parse, int ret)
+{
+	int i;
+
+	i = 0;
+	free(parse->forks);
+	free(parse->philo);
+	pthread_mutex_destroy(&parse->mtext);
+	while (i < parse->nbforks)
+		pthread_mutex_destroy(&parse->lock_fork[i++]);
+	free(parse->lock_fork);
+	return (ret);
 }
