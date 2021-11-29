@@ -61,3 +61,14 @@ int	clear_struct(t_parse *parse, int ret)
 	free(parse->lock_fork);
 	return (ret);
 }
+
+long long int	get_time(t_parse *parse)
+{
+	long long int sec;
+	long long int usec;
+
+	gettimeofday(&parse->time, 0);
+	sec = parse->time.tv_sec - parse->stime_ref;
+	usec = parse->time.tv_usec - parse->utime_ref;
+	return (sec * 1000 + (usec / 1000));
+}

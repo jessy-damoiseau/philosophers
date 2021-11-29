@@ -6,7 +6,7 @@
 #    By: jessy <jessy@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/09 14:45:20 by bmaudet           #+#    #+#              #
-#    Updated: 2021/11/23 01:37:26 by jessy            ###   ########.fr        #
+#    Updated: 2021/11/29 17:46:58 by jessy            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME1 = philosophers
 
 ################################################################################
 
-SRCS1 =	main.c utils.c
+SRCS1 =	main.c utils.c action_philo.c
 
 ################################################################################
 
@@ -26,7 +26,7 @@ OBJS_DIR	=	objs
 
 CC =		@gcc
 RM =		@rm -rf
-CFLAGS =	-Wall -Wextra -Werror -g3 -I$(HEADERS_DIR)
+CFLAGS =	-Wall -Wextra -Werror -g3 -I$(HEADERS_DIR) #-fsanitize=address
 ################################################################################
 
 _RED		=	\033[31m
