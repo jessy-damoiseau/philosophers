@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/16 17:40:18 by jessy             #+#    #+#             */
+/*   Updated: 2021/12/16 18:00:20 by jessy            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <philosophers.h>
 
 size_t	len(char *str)
 {
-	size_t ret;
+	size_t	ret;
 
 	ret = 0;
 	while (str[ret])
@@ -18,9 +30,9 @@ int	print_fd(char *str, int fd, int ret)
 
 int	ft_atoi(char *str)
 {
-	int i;
-	int sign;
-	int result;
+	int	i;
+	int	sign;
+	int	result;
 
 	i = 0;
 	sign = 1;
@@ -46,29 +58,19 @@ void	init_struct(t_parse *parse)
 	parse->philo = 0;
 	parse->id = 0;
 	parse->tab_thread = 0;
+	parse->stop = 0;
 }
 
 int	clear_struct(t_parse *parse, int ret)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	free(parse->forks);
 	free(parse->philo);
 	pthread_mutex_destroy(&parse->mtext);
 	while (i < parse->nbforks)
 		pthread_mutex_destroy(&parse->lock_fork[i++]);
+	free(parse->tab_thread);
 	free(parse->lock_fork);
 	return (ret);
-}
-
-long long int	get_time(t_parse *parse)
-{
-	long long int sec;
-	long long int usec;
-
-	gettimeofday(&parse->time, 0);
-	sec = parse->time.tv_sec - parse->stime_ref;
-	usec = parse->time.tv_usec - parse->utime_ref;
-	return (sec * 1000 + (usec / 1000));
 }
