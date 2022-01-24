@@ -48,8 +48,6 @@ void	check_end(t_parse *parse)
 	status = 0;
 	while (!loop(parse, &status))
 		usleep(1000);
-	if (status == 1)
-		print_fd("A philosopher died\n", 1, 0);
 	if (status == 2)
 		print_fd("All philosophers have finised eating\n", 1, 0);
 	clear_struct(parse, 0);
@@ -64,6 +62,8 @@ int	loop(t_parse *parse, int *status)
 	{
 		if (parse->philo[i++].death)
 		{
+			printf("%lld ms philosopher number %d died\n",
+				get_time(parse), i);
 			*status = 1;
 			return (1);
 		}

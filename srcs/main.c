@@ -6,7 +6,7 @@
 /*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:40:21 by jessy             #+#    #+#             */
-/*   Updated: 2021/12/16 17:56:18 by jessy            ###   ########.fr       */
+/*   Updated: 2022/01/24 15:34:57 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	init_thread(t_parse *parse)
 				0, &action_philo, parse))
 			return (clear_struct(parse,
 					print_fd("fail to create thread\n", 2, 1)));
-		usleep(10);
+		usleep(500);
 		parse->id++;
 	}
 	death = 0;
@@ -99,5 +99,11 @@ int	main(int ac, char **av)
 	gettimeofday(&parse.time, 0);
 	parse.stime_ref = parse.time.tv_sec;
 	parse.utime_ref = parse.time.tv_usec;
+	if (parse.nbphilo == 1)
+	{
+		printf("%lld ms philosopher died\n",
+			get_time(&parse));
+		return (clear_struct(&parse, 0));
+	}
 	return (init_thread(&parse));
 }
