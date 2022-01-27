@@ -6,7 +6,7 @@
 /*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:40:21 by jessy             #+#    #+#             */
-/*   Updated: 2022/01/24 15:34:57 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/01/27 14:28:58 by jessy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,6 @@ int	init_mutex(t_parse *parse)
 
 int	init_thread(t_parse *parse)
 {
-	pthread_t	death;
-
 	parse->id = 0;
 	while (parse->id < parse->nbphilo)
 	{
@@ -73,13 +71,9 @@ int	init_thread(t_parse *parse)
 				0, &action_philo, parse))
 			return (clear_struct(parse,
 					print_fd("fail to create thread\n", 2, 1)));
-		usleep(500);
+		usleep(100);
 		parse->id++;
 	}
-	death = 0;
-	if (pthread_create(&death, 0, &check_death, parse))
-		return (clear_struct(parse, print_fd("fail to create thread\n", 2, 1)));
-	pthread_detach(death);
 	check_end(parse);
 	return (0);
 }

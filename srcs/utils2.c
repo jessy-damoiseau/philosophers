@@ -6,7 +6,7 @@
 /*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:59:28 by jessy             #+#    #+#             */
-/*   Updated: 2021/12/16 18:19:09 by jessy            ###   ########.fr       */
+/*   Updated: 2022/01/27 14:41:53 by jessy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,19 @@ void	*check_death(void *struct_parse)
 	long long int	diff;
 
 	parse = struct_parse;
+	id = parse->id;
 	while (!parse->stop)
 	{
-		id = 0;
 		time = get_time(parse);
-		while (id < parse->nbphilo && !parse->stop)
+		diff = parse->philo[id].teat - time;
+		if (diff < 0)
+			diff *= -1;
+		if (diff > parse->tdie + 4)
 		{
-			diff = parse->philo[id].teat - time;
-			if (diff < 0)
-				diff *= -1;
-			if (diff > parse->tdie)
-			{
-				parse->philo[id].death = 1;
-				parse->stop = 1;
-			}
-			id++;
+			printf("%lld ms philosopher number %d died\n",
+				get_time(parse), parse->philo[id].id_philo);
+			parse->philo[id].death = 1;
+			parse->stop = 1;
 		}
 		usleep(1000);
 	}
@@ -44,12 +42,18 @@ void	*check_death(void *struct_parse)
 void	check_end(t_parse *parse)
 {
 	int	status;
+	int	i;
 
 	status = 0;
+	i = 0;
 	while (!loop(parse, &status))
 		usleep(1000);
+	while (i < parse->nbphilo)
+		pthread_join(parse->tab_thread[i++], 0);
 	if (status == 2)
+	{
 		print_fd("All philosophers have finised eating\n", 1, 0);
+	}
 	clear_struct(parse, 0);
 }
 
@@ -62,8 +66,6 @@ int	loop(t_parse *parse, int *status)
 	{
 		if (parse->philo[i++].death)
 		{
-			printf("%lld ms philosopher number %d died\n",
-				get_time(parse), i);
 			*status = 1;
 			return (1);
 		}
@@ -74,6 +76,7 @@ int	loop(t_parse *parse, int *status)
 		if (parse->philo[i++].nbeat)
 			return (0);
 	}
+	parse->stop = 1;
 	*status = 2;
 	return (1);
 }

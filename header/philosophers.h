@@ -6,7 +6,7 @@
 /*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:40:24 by jessy             #+#    #+#             */
-/*   Updated: 2022/01/24 15:37:42 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/01/27 14:45:16 by jessy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void			take_forks(t_parse *parse, int id, t_philo *philo);
 void			philo_eat(t_parse *parse, int id, t_philo *philo);
 void			philo_sleep(t_parse *parse, int id, t_philo *philo);
 void			philo_think(t_parse *parse, int id, t_philo *philo);
+void			unlock_mutex(t_parse *parse, int id);
 void			*action_philo(void *struct_parse);
 int				init_mutex2(t_parse *parse, int *tab);
 int				init_mutex(t_parse *parse);
