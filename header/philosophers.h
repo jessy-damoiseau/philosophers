@@ -69,4 +69,9 @@ void			check_end(t_parse *parse);
 int				loop(t_parse *parse, int *status);
 long long int	get_time(t_parse *parse);
 int				ft_isdigit(int c);
+void			print_activity(int id_philo, t_parse *parse, char *act);
+void			ft_putstr(char *str);
+char			*itoa(int nb);
+char			*lltoa(long long int nb);
+int				len_nb(long long int nb);
 #endif

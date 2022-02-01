@@ -14,7 +14,7 @@ NAME1 = philosophers
 
 ################################################################################
 
-SRCS1 =	main.c action_philo.c parsing.c utils.c utils2.c
+SRCS1 =	main.c action_philo.c parsing.c utils.c utils2.c activity.c
 
 ################################################################################
 

@@ -6,7 +6,7 @@
 /*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:40:21 by jessy             #+#    #+#             */
-/*   Updated: 2022/01/27 14:28:58 by jessy            ###   ########.fr       */
+/*   Updated: 2022/02/01 14:23:43 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ int	main(int ac, char **av)
 	parse.utime_ref = parse.time.tv_usec;
 	if (parse.nbphilo == 1)
 	{
+		print_activity(1, &parse, "has taken a fork");
+		usleep(parse.tdie * 1000);
 		printf("%lld ms philosopher died\n",
 			get_time(&parse));
 		return (clear_struct(&parse, 0));

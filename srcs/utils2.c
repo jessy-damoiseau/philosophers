@@ -6,7 +6,7 @@
 /*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:59:28 by jessy             #+#    #+#             */
-/*   Updated: 2022/01/27 14:41:53 by jessy            ###   ########.fr       */
+/*   Updated: 2022/02/01 14:29:34 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ void	*check_death(void *struct_parse)
 		diff = parse->philo[id].teat - time;
 		if (diff < 0)
 			diff *= -1;
-		if (diff > parse->tdie + 4)
+		if (diff > parse->tdie + 5)
 		{
-			printf("%lld ms philosopher number %d died\n",
-				get_time(parse), parse->philo[id].id_philo);
+			pthread_mutex_lock(&parse->mtext);
+			print_activity(parse->philo[id].id_philo, parse, "died");
 			parse->philo[id].death = 1;
 			parse->stop = 1;
 		}
@@ -48,6 +48,7 @@ void	check_end(t_parse *parse)
 	i = 0;
 	while (!loop(parse, &status))
 		usleep(1000);
+	pthread_mutex_unlock(&parse->mtext);
 	while (i < parse->nbphilo)
 		pthread_join(parse->tab_thread[i++], 0);
 	if (status == 2)
