@@ -6,7 +6,7 @@
 /*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:59:28 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/01 14:29:34 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/02/03 19:30:50 by jessy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,16 @@ void	*check_death(void *struct_parse)
 {
 	t_parse			*parse;
 	int				id;
-	long long int	time;
-	long long int	diff;
 
 	parse = struct_parse;
 	id = parse->id;
 	while (!parse->stop)
 	{
-		time = get_time(parse);
-		diff = parse->philo[id].teat - time;
-		if (diff < 0)
-			diff *= -1;
-		if (diff > parse->tdie + 5)
+		if (parse->nbeat != -1 && parse->tdie > (parse->nbphilo * 100))
+			usleep(parse->tdie + 1 * 1000);
+		else
+			usleep(parse->tdie * 1000);
+		if (get_time(parse) - parse->philo[id].teat > parse->tdie + 1)
 		{
 			pthread_mutex_lock(&parse->mtext);
 			if (parse->stop)
@@ -36,7 +34,6 @@ void	*check_death(void *struct_parse)
 			parse->philo[id].death = 1;
 			parse->stop = 1;
 		}
-		usleep(1000);
 	}
 	return (0);
 }
