@@ -30,6 +30,8 @@ void	*check_death(void *struct_parse)
 		if (diff > parse->tdie + 5)
 		{
 			pthread_mutex_lock(&parse->mtext);
+			if (parse->stop)
+				break ;
 			print_activity(parse->philo[id].id_philo, parse, "died");
 			parse->philo[id].death = 1;
 			parse->stop = 1;

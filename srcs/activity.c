@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   activity.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/03 14:17:51 by jdamoise          #+#    #+#             */
+/*   Updated: 2022/02/03 14:18:48 by jdamoise         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../header/philosophers.h"
 
-int		len_nb(long long int nb)
+int	len_nb(long long int nb)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (nb / 10)
@@ -13,10 +25,9 @@ int		len_nb(long long int nb)
 	return (i);
 }
 
-
 char	*lltoa(long long int nb)
 {
-	int len;
+	int		len;
 	char	*ret;
 
 	len = len_nb(nb);
@@ -35,7 +46,7 @@ char	*lltoa(long long int nb)
 
 char	*itoa(int nb)
 {
-	int len;
+	int		len;
 	char	*ret;
 
 	len = len_nb((long long int)nb);
@@ -54,8 +65,8 @@ char	*itoa(int nb)
 
 void	ft_putstr(char *str)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
 	while (str[i])
 		write(1, &str[i++], 1);
