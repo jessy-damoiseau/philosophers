@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:40:18 by jessy             #+#    #+#             */
-/*   Updated: 2021/12/16 18:00:20 by jessy            ###   ########.fr       */
+/*   Updated: 2022/02/09 19:13:49 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,15 @@ int	clear_struct(t_parse *parse, int ret)
 	int	i;
 
 	i = 0;
+	while (i < parse->nbphilo)
+	{
+		pthread_mutex_destroy(&parse->philo[i].access_death);
+		pthread_mutex_destroy(&parse->philo[i++].access_eat);
+	}
 	free(parse->philo);
 	pthread_mutex_destroy(&parse->mtext);
+	pthread_mutex_destroy(&parse->access);
+	i = 0;
 	while (i < parse->nbforks)
 		pthread_mutex_destroy(&parse->lock_fork[i++]);
 	free(parse->tab_thread);

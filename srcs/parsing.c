@@ -6,7 +6,7 @@
 /*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:47:53 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/09 16:06:51 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/02/09 19:06:17 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	fill_struct(t_parse *parse, int fill, int i)
 int	fill_philo(t_parse *parse)
 {
 	int	i;
+	int error;
 
 	i = 0;
 	parse->philo = malloc(sizeof(t_philo) * parse->nbphilo);
@@ -43,6 +44,14 @@ int	fill_philo(t_parse *parse)
 		parse->philo[i].id_philo = i + 1;
 		parse->philo[i].teat = 0;
 		parse->philo[i].death = 0;
+		error = pthread_mutex_init(&parse->philo[i].access_eat, 0);
+		if (error)
+			return (clear_struct(parse,
+					print_fd("mutex init failed\n", 2, 1)));
+		error = pthread_mutex_init(&parse->philo[i].access_death, 0);
+		if (error)
+			return (clear_struct(parse,
+					print_fd("mutex init failed\n", 2, 1)));
 		i++;
 	}
 	return (0);

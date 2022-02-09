@@ -6,7 +6,7 @@
 /*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:59:28 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/09 16:05:11 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/02/09 19:31:41 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,46 @@ void	*check_death(void *struct_parse)
 	int				id;
 
 	parse = struct_parse;
+	pthread_mutex_lock(&parse->access);
 	id = parse->id;
+	pthread_mutex_unlock(&parse->access);
+	pthread_mutex_lock(&parse->access);
 	while (!parse->stop)
 	{
+		pthread_mutex_unlock(&parse->access);
 		if (parse->nbeat != -1)
 			usleep(parse->tdie + 1 * 1000);
 		else
 			usleep(parse->tdie * 1000);
+		pthread_mutex_lock(&parse->philo[id].access_eat);
 		if (get_time(parse) - parse->philo[id].teat > parse->tdie)
 		{
-			pthread_mutex_lock(&parse->mtext);
+			pthread_mutex_unlock(&parse->philo[id].access_eat);
+			
+			pthread_mutex_lock(&parse->access);
 			if (parse->stop)
+			{
+				pthread_mutex_unlock(&parse->access);
 				break ;
+			}
+			pthread_mutex_unlock(&parse->access);
+			
+			pthread_mutex_lock(&parse->mtext);
 			print_activity(parse->philo[id].id_philo, parse, "died");
+			
+			pthread_mutex_lock(&parse->philo[id].access_death);
 			parse->philo[id].death = 1;
+			pthread_mutex_unlock(&parse->philo[id].access_death);
+			
+			pthread_mutex_lock(&parse->access);
 			parse->stop = 1;
+			pthread_mutex_unlock(&parse->mtext);
+			pthread_mutex_unlock(&parse->access);
 		}
+		pthread_mutex_unlock(&parse->philo[id].access_eat);
+		pthread_mutex_lock(&parse->access);
 	}
-	pthread_mutex_unlock(&parse->mtext);
+	pthread_mutex_unlock(&parse->access);
 	return (0);
 }
 
@@ -64,11 +86,15 @@ int	loop(t_parse *parse, int *status)
 	i = 0;
 	while (i < parse->nbphilo)
 	{
-		if (parse->philo[i++].death)
+		pthread_mutex_lock(&parse->philo[i].access_death);
+		if (parse->philo[i].death)
 		{
+			pthread_mutex_unlock(&parse->philo[i].access_death);
 			*status = 1;
 			return (1);
 		}
+		pthread_mutex_unlock(&parse->philo[i].access_death);
+		i++;
 	}
 	i = 0;
 	while (i < parse->nbphilo)

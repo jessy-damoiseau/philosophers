@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:40:24 by jessy             #+#    #+#             */
-/*   Updated: 2022/01/27 14:45:16 by jessy            ###   ########.fr       */
+/*   Updated: 2022/02/09 18:40:54 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,14 @@ typedef struct s_philo
 	int				nb_fork;
 	long long int	teat;
 	int				death;
+	pthread_mutex_t access_eat;
+	pthread_mutex_t access_death;
 }				t_philo;
 
 typedef struct s_parse
 {
 	pthread_mutex_t	mtext;
+	pthread_mutex_t	access;
 	pthread_mutex_t	*lock_fork;
 	pthread_t		*tab_thread;
 	int				nbphilo;

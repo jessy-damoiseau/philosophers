@@ -6,7 +6,7 @@
 #    By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/09 14:45:20 by bmaudet           #+#    #+#              #
-#    Updated: 2022/02/09 15:53:33 by jdamoise         ###   ########.fr        #
+#    Updated: 2022/02/09 19:45:16 by jdamoise         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ OBJS_DIR	=	objs
 
 CC =		@gcc
 RM =		@rm -rf
-CFLAGS =	-Wall -Wextra -Werror -g3 -I$(HEADERS_DIR) #-fsanitize=address
+CFLAGS =	-Wall -Wextra -Werror -g3 -I$(HEADERS_DIR) #-fsanitize=thread
 ################################################################################
 
 _RED		=	\033[31m
@@ -63,7 +63,7 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 
 $(NAME1):	$(OBJS1)
 			echo "\t$(_YELLOW)[Creating $(NAME1) program]"
-					$(CC) $(OBJS1) -o $(NAME1)
+					$(CC) $(OBJS1) -o $(NAME1) $(CFLAGS)
 					echo "$(_GREEN)[$(NAME1) program created & ready]"
 
 ################################################################################
