@@ -59,6 +59,7 @@ int				main(int ac, char **av);
 void			fill_struct(t_parse *parse, int fill, int i);
 int				fill_philo(t_parse *parse);
 int				parsing(t_parse *parse, char **args, int ac);
+void			ft_usleep(long int time_in_ms, t_parse *parse);
 size_t			len(char *str);
 int				print_fd(char *str, int fd, int ret);
 int				ft_atoi(char *str);

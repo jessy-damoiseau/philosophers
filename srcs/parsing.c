@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:47:53 by jessy             #+#    #+#             */
-/*   Updated: 2021/12/16 18:19:19 by jessy            ###   ########.fr       */
+/*   Updated: 2022/02/09 16:06:51 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,11 @@ int	parsing(t_parse *parse, char **args, int ac)
 	if (ac > 6)
 		return (print_fd("to many args\n", 2, 1));
 	if (check_args(args))
-		return (print_fd("one of the arguments is not a number\n", 2, 1));
+		return (print_fd("one of the arguments in invalid \n", 2, 1));
 	while (args[++i])
 	{
 		fill = ft_atoi(args[i]);
-		if (fill < 0)
+		if (fill <= 0)
 		{
 			print_fd(args[i], 2, 0);
 			return (print_fd(": invalid args\n", 2, 1));
@@ -89,4 +89,16 @@ int	parsing(t_parse *parse, char **args, int ac)
 		fill_struct(parse, fill, i);
 	}
 	return (fill_philo(parse));
+}
+
+void	ft_usleep(long int time_in_ms, t_parse *parse)
+{
+	long int	start_time;
+
+	start_time = 0;
+	start_time = get_time(parse);
+	while ((get_time(parse) - start_time) < time_in_ms)
+	{
+		usleep(time_in_ms / 10);
+	}
 }

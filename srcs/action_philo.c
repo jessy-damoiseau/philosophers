@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action_philo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 16:17:14 by jessy             #+#    #+#             */
-/*   Updated: 2022/01/27 14:44:58 by jessy            ###   ########.fr       */
+/*   Updated: 2022/02/09 16:07:10 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	take_forks(t_parse *parse, int id, t_philo *philo)
 	print_activity(philo[id].id_philo, parse, "has taken a fork");
 	print_activity(philo[id].id_philo, parse, "is eating");
 	pthread_mutex_unlock(&parse->mtext);
-	usleep(parse->teat * 1000);
+	ft_usleep(parse->teat, parse);
 	philo[id].teat = get_time(parse);
 	pthread_mutex_unlock(&parse->lock_fork[id]);
 	pthread_mutex_unlock(&parse->lock_fork[philo[id].id_philo
@@ -41,7 +41,7 @@ void	philo_sleep(t_parse *parse, int id, t_philo *philo)
 		return ;
 	print_activity(philo[id].id_philo, parse, "is sleeping");
 	pthread_mutex_unlock(&parse->mtext);
-	usleep(parse->tsleep * 1000);
+	ft_usleep(parse->tsleep, parse);
 	pthread_mutex_lock(&parse->mtext);
 	if (parse->stop)
 		return ;

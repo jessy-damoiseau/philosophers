@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:40:21 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/01 14:23:43 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/02/09 16:06:10 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	main(int ac, char **av)
 	if (parse.nbphilo == 1)
 	{
 		print_activity(1, &parse, "has taken a fork");
-		usleep(parse.tdie * 1000);
+		ft_usleep(parse.tdie, &parse);
 		printf("%lld ms philosopher died\n",
 			get_time(&parse));
 		return (clear_struct(&parse, 0));

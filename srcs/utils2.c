@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:59:28 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/03 19:30:50 by jessy            ###   ########.fr       */
+/*   Updated: 2022/02/09 16:05:11 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ void	*check_death(void *struct_parse)
 	id = parse->id;
 	while (!parse->stop)
 	{
-		if (parse->nbeat != -1 && parse->tdie > (parse->nbphilo * 100))
+		if (parse->nbeat != -1)
 			usleep(parse->tdie + 1 * 1000);
 		else
 			usleep(parse->tdie * 1000);
-		if (get_time(parse) - parse->philo[id].teat > parse->tdie + 1)
+		if (get_time(parse) - parse->philo[id].teat > parse->tdie)
 		{
 			pthread_mutex_lock(&parse->mtext);
 			if (parse->stop)
@@ -35,6 +35,7 @@ void	*check_death(void *struct_parse)
 			parse->stop = 1;
 		}
 	}
+	pthread_mutex_unlock(&parse->mtext);
 	return (0);
 }
 
@@ -46,8 +47,7 @@ void	check_end(t_parse *parse)
 	status = 0;
 	i = 0;
 	while (!loop(parse, &status))
-		usleep(1000);
-	pthread_mutex_unlock(&parse->mtext);
+		ft_usleep(1, parse);
 	while (i < parse->nbphilo)
 		pthread_join(parse->tab_thread[i++], 0);
 	if (status == 2)
