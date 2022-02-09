@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:59:28 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/09 19:31:41 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/02/09 22:58:54 by jessy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers.h>
+
+void	go_death(t_parse *parse, int id)
+{
+	pthread_mutex_lock(&parse->philo[id].access_death);
+	parse->philo[id].death = 1;
+	pthread_mutex_unlock(&parse->philo[id].access_death);
+	pthread_mutex_lock(&parse->access);
+	parse->stop = 1;
+	pthread_mutex_unlock(&parse->access);
+	pthread_mutex_unlock(&parse->philo[id].access_eat);
+	pthread_mutex_lock(&parse->mtext);
+	print_activity(parse->philo[id].id_philo, parse, "died");
+	pthread_mutex_unlock(&parse->mtext);
+}
 
 void	*check_death(void *struct_parse)
 {
@@ -20,40 +34,17 @@ void	*check_death(void *struct_parse)
 	parse = struct_parse;
 	pthread_mutex_lock(&parse->access);
 	id = parse->id;
-	pthread_mutex_unlock(&parse->access);
-	pthread_mutex_lock(&parse->access);
 	while (!parse->stop)
 	{
 		pthread_mutex_unlock(&parse->access);
 		if (parse->nbeat != -1)
-			usleep(parse->tdie + 1 * 1000);
+			usleep(parse->tdie + 1000);
 		else
 			usleep(parse->tdie * 1000);
 		pthread_mutex_lock(&parse->philo[id].access_eat);
-		if (get_time(parse) - parse->philo[id].teat > parse->tdie)
-		{
-			pthread_mutex_unlock(&parse->philo[id].access_eat);
-			
-			pthread_mutex_lock(&parse->access);
-			if (parse->stop)
-			{
-				pthread_mutex_unlock(&parse->access);
-				break ;
-			}
-			pthread_mutex_unlock(&parse->access);
-			
-			pthread_mutex_lock(&parse->mtext);
-			print_activity(parse->philo[id].id_philo, parse, "died");
-			
-			pthread_mutex_lock(&parse->philo[id].access_death);
-			parse->philo[id].death = 1;
-			pthread_mutex_unlock(&parse->philo[id].access_death);
-			
-			pthread_mutex_lock(&parse->access);
-			parse->stop = 1;
-			pthread_mutex_unlock(&parse->mtext);
-			pthread_mutex_unlock(&parse->access);
-		}
+		if (!check_status(parse) && (get_time(parse)
+				- parse->philo[id].teat > parse->tdie + 1))
+			go_death(parse, id);
 		pthread_mutex_unlock(&parse->philo[id].access_eat);
 		pthread_mutex_lock(&parse->access);
 	}
@@ -105,22 +96,4 @@ int	loop(t_parse *parse, int *status)
 	parse->stop = 1;
 	*status = 2;
 	return (1);
-}
-
-long long int	get_time(t_parse *parse)
-{
-	long long int	sec;
-	long long int	usec;
-
-	gettimeofday(&parse->time, 0);
-	sec = parse->time.tv_sec - parse->stime_ref;
-	usec = parse->time.tv_usec - parse->utime_ref;
-	return (sec * 1000 + (usec / 1000));
-}
-
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
 }

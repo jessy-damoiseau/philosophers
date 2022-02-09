@@ -3,14 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:40:21 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/09 17:28:09 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/02/09 23:05:07 by jessy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philosophers.h>
+
+int	init_mutex3(t_parse *parse)
+{
+	int	i;
+
+	i = pthread_mutex_init(&parse->access, 0);
+	if (i)
+		 return (clear_struct(parse,
+				print_fd("mutex init failed\n", 2, 1)));
+	return (0);
+}
 
 int	init_mutex2(t_parse *parse, int *tab)
 {
@@ -34,12 +45,8 @@ int	init_mutex2(t_parse *parse, int *tab)
 		}
 		i++;
 	}
-	i = pthread_mutex_init(&parse->access, 0);
-	if (i)
-		 return (clear_struct(parse,
-					print_fd("mutex init failed\n", 2, 1)));
 	free(tab);
-	return (0);
+	return (init_mutex3(parse));
 }
 
 int	init_mutex(t_parse *parse)
@@ -75,7 +82,7 @@ int	init_thread(t_parse *parse)
 				0, &action_philo, parse))
 			return (clear_struct(parse,
 					print_fd("fail to create thread\n", 2, 1)));
-		usleep(100);
+		usleep(350);
 		pthread_mutex_lock(&parse->access);
 		parse->id++;
 		pthread_mutex_unlock(&parse->access);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:47:53 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/09 19:06:17 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/02/09 21:45:13 by jessy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	fill_struct(t_parse *parse, int fill, int i)
 int	fill_philo(t_parse *parse)
 {
 	int	i;
-	int error;
+	int	error;
 
 	i = 0;
 	parse->philo = malloc(sizeof(t_philo) * parse->nbphilo);

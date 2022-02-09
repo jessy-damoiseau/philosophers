@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+         #
+#    By: jessy <jessy@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/09 14:45:20 by bmaudet           #+#    #+#              #
-#    Updated: 2022/02/09 19:45:16 by jdamoise         ###   ########.fr        #
+#    Updated: 2022/02/09 23:06:35 by jessy            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME1 = philo
 
 ################################################################################
 
-SRCS1 =	main.c action_philo.c parsing.c utils.c utils2.c activity.c
+SRCS1 =	main.c action_philo.c parsing.c utils.c utils2.c utils3.c activity.c
 
 ################################################################################
 
@@ -26,7 +26,7 @@ OBJS_DIR	=	objs
 
 CC =		@gcc
 RM =		@rm -rf
-CFLAGS =	-Wall -Wextra -Werror -g3 -I$(HEADERS_DIR) #-fsanitize=thread
+CFLAGS =	-Wall -Wextra -Werror -g3 -I$(HEADERS_DIR) -fsanitize=thread
 ################################################################################
 
 _RED		=	\033[31m
