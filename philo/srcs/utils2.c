@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:59:28 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/09 22:58:54 by jessy            ###   ########.fr       */
+/*   Updated: 2022/02/10 14:24:35 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	*check_death(void *struct_parse)
 		pthread_mutex_unlock(&parse->access);
 		if (parse->nbeat != -1)
 			usleep(parse->tdie + 1000);
+		else if (parse->teat + parse->tsleep > parse->tdie)
+			ft_usleep(1, parse);
 		else
 			usleep(parse->tdie * 1000);
 		pthread_mutex_lock(&parse->philo[id].access_eat);

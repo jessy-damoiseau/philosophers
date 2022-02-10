@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action_philo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 16:17:14 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/09 23:07:59 by jessy            ###   ########.fr       */
+/*   Updated: 2022/02/10 14:29:00 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	*action_philo(void *struct_parse)
 		return (0);
 	}
 	go_action(parse, id);
+	pthread_join(death, 0);
 	unlock_mutex(parse, id);
-	pthread_detach(death);
 	return (0);
 }

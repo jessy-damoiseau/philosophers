@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jessy <jessy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:40:21 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/09 23:05:07 by jessy            ###   ########.fr       */
+/*   Updated: 2022/02/10 14:33:40 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	init_mutex3(t_parse *parse)
 
 	i = pthread_mutex_init(&parse->access, 0);
 	if (i)
-		 return (clear_struct(parse,
+		return (clear_struct(parse,
 				print_fd("mutex init failed\n", 2, 1)));
 	return (0);
 }
