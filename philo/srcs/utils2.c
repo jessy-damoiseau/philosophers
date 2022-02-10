@@ -6,7 +6,7 @@
 /*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:59:28 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/10 14:24:35 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/02/10 15:29:20 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,10 @@ void	*check_death(void *struct_parse)
 	while (!parse->stop)
 	{
 		pthread_mutex_unlock(&parse->access);
-		if (parse->nbeat != -1)
-			usleep(parse->tdie + 1000);
-		else if (parse->teat + parse->tsleep > parse->tdie)
-			ft_usleep(1, parse);
-		else
-			usleep(parse->tdie * 1000);
+		usleep(parse->tdie + 1000);
 		pthread_mutex_lock(&parse->philo[id].access_eat);
 		if (!check_status(parse) && (get_time(parse)
-				- parse->philo[id].teat > parse->tdie + 1))
+				- parse->philo[id].teat > parse->tdie))
 			go_death(parse, id);
 		pthread_mutex_unlock(&parse->philo[id].access_eat);
 		pthread_mutex_lock(&parse->access);
@@ -62,7 +57,7 @@ void	check_end(t_parse *parse)
 	status = 0;
 	i = 0;
 	while (!loop(parse, &status))
-		ft_usleep(1, parse);
+		usleep(100);
 	while (i < parse->nbphilo)
 		pthread_join(parse->tab_thread[i++], 0);
 	if (status == 2)

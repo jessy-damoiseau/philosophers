@@ -6,7 +6,7 @@
 /*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 17:40:21 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/10 14:33:40 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/02/10 15:04:25 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	init_thread(t_parse *parse)
 				0, &action_philo, parse))
 			return (clear_struct(parse,
 					print_fd("fail to create thread\n", 2, 1)));
-		usleep(350);
+		usleep(300);
 		pthread_mutex_lock(&parse->access);
 		parse->id++;
 		pthread_mutex_unlock(&parse->access);

@@ -6,7 +6,7 @@
 /*   By: jdamoise <jdamoise@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 16:17:14 by jessy             #+#    #+#             */
-/*   Updated: 2022/02/10 14:29:00 by jdamoise         ###   ########.fr       */
+/*   Updated: 2022/02/10 15:30:15 by jdamoise         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	fork2(t_parse *parse, int id, t_philo *philo)
 	if (check_status(parse))
 		return (1);
 	ft_usleep(parse->teat, parse);
+	if (parse->philo[id].nbeat > 0)
+		parse->philo[id].nbeat--;
 	pthread_mutex_unlock(&parse->lock_fork[id]);
 	pthread_mutex_unlock(&parse->lock_fork[philo[id].id_philo
 		% parse->nbphilo]);
@@ -66,9 +68,7 @@ void	go_action(t_parse *parse, int id)
 	{
 		if (!fork1(parse, id, parse->philo))
 			if (!fork2(parse, id, parse->philo))
-				if (!sleeping(parse, id, parse->philo))
-					if (parse->philo[id].nbeat > 0)
-						parse->philo[id].nbeat--;
+				sleeping(parse, id, parse->philo);
 	}
 }
 
